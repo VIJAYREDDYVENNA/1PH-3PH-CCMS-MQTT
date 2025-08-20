@@ -1,0 +1,37 @@
+ALTER TABLE `user_device_list` ADD `phase` VARCHAR(20) NOT NULL DEFAULT '3PH' AFTER `login_id`;
+ALTER TABLE `activation_codes` ADD `phase` VARCHAR(20) NOT NULL DEFAULT '3PH' AFTER `code`;
+ALTER TABLE `live_data_updates` ADD `phase` VARCHAR(100) NOT NULL DEFAULT '3PH' AFTER `operation_mode`;
+
+
+DROP VIEW `device_list_by_group`, `user_device_group_view`;
+
+CREATE VIEW `device_list_by_group`  AS SELECT `devices_group`.`s_id` AS `s_id`,
+ `user_device_list`.`device_id` AS `device_id`,
+ `user_device_list`.`c_device_name` AS `c_device_name`,
+ `user_device_list`.`s_device_name` AS `s_device_name`,
+ `user_device_list`.`role` AS `role`,
+ `user_device_list`.`login_id` AS `login_id`,
+ `user_device_list`.`phase` AS `phase`,
+ `devices_group`.`state` AS `state`,
+ `devices_group`.`district` AS `district`,
+ `devices_group`.`city_or_town` AS `city_or_town`,
+ `devices_group`.`device_group_or_area` AS `device_group_or_area` FROM (`user_device_list` join `devices_group` on(`user_device_list`.`device_id` = `devices_group`.`device_id`)) ;
+
+
+CREATE VIEW `user_device_group_view`  AS SELECT `udl`.`id` AS `id`,
+ `udl`.`device_id` AS `device_id`,
+ `udl`.`c_device_name` AS `c_device_name`,
+ `udl`.`s_device_name` AS `s_device_name`,
+ `udl`.`role` AS `role`,
+ `udl`.`login_id` AS `login_id`,
+ `udl`.`phase` AS `phase`,
+ coalesce(`dg`.`s_id`,
+ 'UNGROUPED') AS `s_id`,
+ coalesce(`dg`.`state`,
+ 'UNGROUPED') AS `state`,
+ coalesce(`dg`.`district`,
+ 'UNGROUPED') AS `district`,
+ coalesce(`dg`.`city_or_town`,
+ 'UNGROUPED') AS `city_or_town`,
+ coalesce(`dg`.`device_group_or_area`,
+ 'UNGROUPED') AS `device_group_or_area` FROM (`user_device_list` `udl` left join `devices_group` `dg` on(`udl`.`device_id` = `dg`.`device_id`)) ORDER BY `udl`.`device_id` ASC ;

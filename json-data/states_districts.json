@@ -1,0 +1,23 @@
+{
+    "Andhra Pradesh": [
+        "Anantapur",
+        "Chittoor",
+        "Guntur",
+        "Chittor",
+        "Vijayawada",
+        "Nandyala"
+    ],
+    "Karnataka": [
+        "Bangalore",
+        "Mysore"
+    ],
+    "Telangana": [
+        "Hyderabad",
+        "Karimagar",
+        "Medchal",
+        "warangal"
+    ],
+    "ISTL": [
+        "ISTL-TESTING"
+    ]
+}

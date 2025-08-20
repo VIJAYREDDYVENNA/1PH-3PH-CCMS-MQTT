@@ -1,0 +1,211 @@
+.background-image-client {
+	background-image: url("../assets/photos/client/nandyala/bg-2.png");
+	background-size: cover;
+	background-position: center;
+	background-repeat: no-repeat;
+	background-attachment: fixed;
+	min-height: 100vh;
+}
+
+.ap-logo {
+	width: 100px;
+	height: 100px;
+}
+
+.title-section {
+	text-align: center;
+	padding: 1rem;
+}
+
+.title-section h1 {
+	font-size: 2.2rem;
+	font-weight: 700;
+	margin-bottom: 0.5rem;
+	line-height: 1.2;
+}
+
+.title-section h2 {
+	font-size: 1.8rem;
+	font-weight: 600;
+	margin-bottom: 0.5rem;
+}
+
+.green-text {
+	color: var(--primary-color);
+}
+
+.official-card {
+	background: white;
+	padding: 15px;
+	border-radius: 12px;
+	text-align: center;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+	margin: 0px 0;
+	transition: transform 0.3s ease;
+	height: 100%;
+	overflow: hidden;
+	/* Prevent content from spilling out */
+}
+
+.official-card img {
+	width: 120px;
+	height: 120px;
+	object-fit: cover;
+	margin: 0 auto 15px;
+	border-radius: 8px;
+	border: 2px solid var(--primary-color);
+	max-width: 100%;
+	/* Ensure image stays within card */
+}
+
+.official-card h6 {
+	font-size: 16px;
+	margin-bottom: 8px;
+	color: #333;
+	font-weight: 600;
+}
+
+.official-card p {
+	font-size: 14px;
+	margin-bottom: 0;
+	line-height: 1.4;
+	color: #666;
+}
+
+.login-container {
+	background: white;
+	border-radius: 16px; 
+	width: 100%;
+	max-width: 400px;
+	box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+	margin: 0 auto;
+	/* Center the login container */
+}
+
+.btn-outline-primary {
+	color: var(--primary-color);
+	border-color: var(--primary-color);
+	border-radius: 8px;
+}
+
+.btn-outline-primary:hover {
+	background-color: var(--primary-color);
+	border-color: var(--primary-color);
+	color: #000;
+}
+
+.footer {
+	text-align: center;
+	padding: 1rem;
+	background-color: #f8f9fa;
+	margin-top: 2rem;
+	border-top: 1px solid #eee;
+}
+
+
+
+.brand-tag {
+	display: flex;
+	align-items: center;
+	text-decoration: none;
+	color: inherit;
+}
+
+.font-small {
+	font-size: 0.85rem;
+}
+
+/* Styles for small screens */
+
+@media (max-width: 767.98px) {
+
+	/* Hide the original header on small screens */
+	.header-container {
+		display: none;
+	}
+
+	/* Adjust card sizes for small screens */
+	.official-card {
+		padding: 10px;
+		margin-bottom: 10px;
+	}
+
+	.official-card img {
+		width: 70px;
+		height: 70px;
+		margin-bottom: 8px;
+	}
+
+	.official-card h6 {
+		font-size: 14px;
+		margin-bottom: 3px;
+		line-height: 1.2;
+	}
+
+	.official-card p {
+		font-size: 12px;
+		line-height: 1.2;
+		margin-bottom: 0;
+	}
+
+	/* Logo styling for small screens */
+	.small-screen-logo {
+		display: block;
+		text-align: center;
+	}
+
+	.small-screen-logo .ap-logo {
+		width: 80px;
+		height: 80px;
+		margin: 0 auto;
+	}
+
+	/* Title styling for small screens */
+	.small-screen-title {
+		text-align: center;
+		padding: 0.5rem 0;
+	}
+
+	.small-screen-title h1 {
+		font-size: 1.2rem;
+		margin-bottom: 0.2rem;
+	}
+
+	.small-screen-title h2 {
+		font-size: 1rem;
+	}
+}
+
+/* Fix for medium screens (1000px to 1199px) */
+@media (min-width: 1000px) and (max-width: 1199px) {
+	.official-card {
+		padding: 10px;
+		height: auto;
+	}
+
+	.official-card img {
+		width: 90px;
+		height: 90px;
+		max-width: 90%;
+		margin-bottom: 10px;
+	}
+
+	.official-card h6 {
+		font-size: 14px;
+		margin-bottom: 5px;
+	}
+
+	.official-card p {
+		font-size: 12px;
+		line-height: 1.2;
+	}
+
+	.title-section h1 {
+		font-size: 1.8rem;
+	}
+
+	.title-section h2 {
+		font-size: 1.4rem;
+	}
+}
+

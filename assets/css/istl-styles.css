@@ -1,0 +1,251 @@
+	[data-bs-theme=light] 
+	{
+		.table-header-row-1 {
+			background-color: #7095b2;
+			color: white;
+		}
+		.table-header-row-2 
+		{
+			background-color: #9aa7b1;
+			color: white;
+		}
+		.bg-info-emphasis{
+			background-color:  #087a91;
+		}
+    	.table-header1-row-1 {
+			background-color: #e9ecef ;
+			color: black;
+		}
+
+	}
+	[data-bs-theme=dark] {
+		.table-header-row-1
+		{
+
+			background-color: #476780;
+		}
+		.table-header-row-2{
+
+			background-color: #505d68;
+		}
+		.phase-text {
+			background: rgba(255, 255, 255, 0.1);
+		}
+		.bg-info-emphasis{
+			background-color:  #0989aa;
+		}
+    	.table-header1-row-1 {
+			background-color: #2c3e3e;
+			color: white;
+		}
+	}
+
+	select{
+		cursor: pointer;
+	}
+	#togglePassword {
+		background: transparent; !important;		
+	}
+	#togglePassword:hover {
+		background: transparent; !important;		
+	}
+	.pre-loader {
+		display: block;
+		position: absolute;
+		z-index: 999952;
+		padding-top: 50px;
+		left: 0;
+		top: 0;
+		width: 100%;
+		height: 100%;
+		overflow: auto;
+		background-color: rgba(0,0,0,0.7);
+		text-align: center;
+	}
+	.istl-loader {
+		border: 16px solid #f3f3f3;
+		border-radius: 50%;
+		border-top: 16px solid #2c82c3;
+		border-bottom: 16px solid #2c82c3;
+		width: 100px;
+		height: 100px;
+		-webkit-animation: spin 2s linear infinite;
+		animation: spin 2s linear infinite;
+		margin: 1% auto;
+		margin-top: 10%;
+	}
+	.loader-text {
+		text-align: center;
+		font-size: 30px;
+		color: white;
+	}
+	@-webkit-keyframes spin {
+		0% {
+			-webkit-transform: rotate(0deg);
+		}
+		100% {
+			-webkit-transform: rotate(360deg);
+		}
+	}
+	@keyframes spin {
+		0% {
+			transform: rotate(0deg);
+		}
+		100% {
+			transform: rotate(360deg);
+		}
+	}
+	
+	.body-container{
+		width:100%; height: 100%; position: fixed;
+	}
+
+	/*================  font Small ======================*/
+	.font-small{
+		font-size: 0.8rem !important;
+	}
+	.font-x-small{
+		font-size: 0.7rem !important;
+	}
+	.font-xx-small{
+		font-size: 0.6rem !important;
+	}
+
+	/*================  Table styles ======================*/
+
+	.table-responsive {
+		max-height: 600px;
+		overflow: auto;
+	}
+	.table-responsive >table, .table-responsive-1>table{
+		margin-bottom: 0px !important;
+	}
+	.table-responsive-1
+	{
+		max-height: 400px;
+		overflow: auto;
+	}
+	
+	
+	.bg-logo-color{
+		background-color: #2c82c3 !important;
+	}
+	.table-type-1 {
+		font-size: 0.9em;
+		font-family: sans-serif !important;
+		box-shadow: 0 0 20px rgba(0, 0, 0, 0.15) !important;
+	}		
+	th,
+	td {
+		padding: 12px !important;			
+		min-width: 120px !important;
+	}
+	.select-option{
+		width: 0px !important;
+		min-width:50px !important;
+	}
+	.col-size-1{
+		min-width: 180px !important;
+	}
+	.table-type-1 tbody tr:last-of-type {
+		border-bottom: 4px solid #7095b2 !important;
+	}
+
+	.table-sticky-header th
+	{
+		padding: 8px 8px !important;	
+	}
+	.table-sticky-header td
+	{
+		padding: 10px 5px !important;
+	}
+	table th {
+		position: sticky;
+		top: 0;
+	}
+	.sticky-header {
+		grid-template-rows: auto auto;
+		position: sticky;
+		top: 0;
+		z-index: 2;
+	}
+
+/*=======================================================*/
+
+
+.popup-session-out {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0, 0, 0, 0.7);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	display: none;
+	z-index: 1061 !important; 
+}
+
+.phase-text{
+	width:50px ;
+	height: 50px;
+	background: rgba(255, 255, 255, 0.6);
+	border-radius: 50px;
+	flex: none;
+	font-weight: bold;
+
+}
+
+.pointer{
+	cursor: pointer;
+}
+
+.custom-alert {
+	display: none;
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 9999;
+	justify-content: center;
+	align-items: center;
+	margin-top: 10px;
+} 
+.custom-alert-content {
+	background-color: #fff;
+	padding: 20px;
+	border-radius: 5px;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+	text-align: center;
+}
+.highlight-first-letter::first-letter {
+	color: red;
+	font-weight: bold; 
+}
+
+.bg-graph {
+	background: rgba(31, 31, 31, 0.89);
+	border-radius: 5px;
+	padding: 10px;
+	box-shadow: 5px 5px 5px gray;
+	color: white;
+}
+.popup-btn-group{
+	position:absolute !important;
+}
+#selectedDevicesList{
+	max-height: 300px; 
+	overflow-y: auto;
+}
+
+.multi_selection_device_id option:checked {
+	background-color: #2c82c3 !important; 
+	color: white; 
+}
+.dropdown-menu-user-list {
+	position: fixed !important;
+}
+
+
