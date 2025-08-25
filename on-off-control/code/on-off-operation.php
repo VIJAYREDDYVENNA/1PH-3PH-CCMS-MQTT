@@ -2,6 +2,9 @@
 require_once '../../base-path/config-path.php';
 require_once BASE_PATH_1.'config_db/config.php';
 require_once BASE_PATH_1.'session/session-manager.php';
+require_once '../../common-files/MQTT_Message_publish.php';
+
+
 SessionManager::checkSession();
 $sessionVars = SessionManager::SessionVariables();
 
@@ -13,7 +16,7 @@ $user_name = $sessionVars['user_name'];
 $user_email = $sessionVars['user_email'];
 $permission_check=0;
 
-$response = ["status" => "error", "message" => ""];
+$response = ["status" => "error", "message" => "","mqtt_status"=>""];
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['D_ID']) && isset($_POST['ON_OFF_MODE']) && isset($_POST['TIME'])) {
 	$conn = mysqli_connect(HOST, USERNAME, PASSWORD, DB_USER);
@@ -68,12 +71,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['D_ID']) && isset($_POS
 				mysqli_stmt_bind_param($insert_stmt, "sssssss", $device_id, $mode, $time, $mobile_no, $user_email, $user_name, $role);
 				mysqli_stmt_execute($insert_stmt);
 				mysqli_stmt_close($insert_stmt);
-
+				try{
+					$message = $mode . ":" . $time;
+					$topic='CCMS/'.$device_id.'/SETVALUES';
+					publishMQTTMessage($topic, $message);
+					$response["mqtt_status"]=$message;
+				}
+				catch(Exception $e){
+					$response["mqtt_status"]='';
+				}
 				$setting_sql = "INSERT INTO device_settings (`setting_type`, `setting_flag`) VALUES ('ONOFF', '1') ON DUPLICATE KEY UPDATE setting_type='ONOFF', setting_flag='1'";
 				if (!mysqli_query($conn_db, $setting_sql)) {
 					$response["message"] = "Error updating device settings: " . mysqli_error($conn_db);
 					mysqli_close($conn_db);
 					echo json_encode($response);
+					
 					exit();
 				}
 

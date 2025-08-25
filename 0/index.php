@@ -438,6 +438,7 @@ SessionManager::checkSession();
 
     <?php
     include(BASE_PATH . "dashboard/dashboard_modals.php");
+    include("./mqtt-connection.php");
     ?>
 
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCvlom5_AlCYoIgXu94yl_VyRRRBc0xSFQ&callback=initMap" async defer></script>

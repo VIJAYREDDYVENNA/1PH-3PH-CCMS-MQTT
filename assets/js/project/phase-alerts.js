@@ -73,7 +73,6 @@ function formatDateToYMD(date) {
 
 function update_data_table(device_id, records, selected_alert, start_date, end_date ){
     $("#pre-loader").css('display', 'block'); 
-
     $.ajax({
         type: "POST",
         url: '../alerts/code/phases-alert_table.php',

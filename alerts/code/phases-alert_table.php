@@ -2,6 +2,7 @@
 require_once '../../base-path/config-path.php';
 require_once BASE_PATH_1 . 'config_db/config.php';
 require_once BASE_PATH_1 . 'session/session-manager.php';
+
 SessionManager::checkSession();
 $sessionVars = SessionManager::SessionVariables();
 
