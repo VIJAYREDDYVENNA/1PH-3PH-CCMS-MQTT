@@ -157,11 +157,11 @@ if($credentials_check)
 				mysqli_close($conn);
 				if($login_path=="0")
 				{
-					header("location:index.php");
+					header("location:dashboard.php");
 				}
 				else
 				{
-					header("location:../$client_login_verion/index.php");
+					header("location:../$client_login_verion/dashboard.php");
 				}
 				exit();
 			}

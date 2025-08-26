@@ -1,9 +1,11 @@
 <?php
 require_once 'config-path.php';
 require_once '../session/session-manager.php';
+require_once '../common-files/MQTT_Message_publish.php';
 SessionManager::checkSession();
 
-$send = ["status" => "", "message" => ""];
+
+$send = ["status" => "", "message" => "", "mqtt_status" => ""];
 
 date_default_timezone_set('Asia/Kolkata');
 $offset_address = 0;
@@ -112,6 +114,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             if (mysqli_query($conn, "INSERT INTO `$db`.`device_settings` (`setting_type`, `setting_flag`) VALUES('SOFTWARE', '1') ON DUPLICATE KEY UPDATE setting_flag='1'")) {
                                 if (mysqli_query($conn, "INSERT INTO `$db`.`device_settings` (`setting_type`, `setting_flag`) VALUES('READ_SETTINGS', '1') ON DUPLICATE KEY UPDATE setting_flag='1'")) {
                                     $send = ["status" => "success", "message" => "File uploaded successfully"];
+
+                                    try {
+                                        $message = "S_UPDATE";
+                                        $topic = 'CCMS/' . $deviceid . '/SETVALUES';
+                                        publishMQTTMessage($topic, $message);
+                                        $send["mqtt_status"] = $message;
+                                    } catch (Exception $e) {
+                                        $send["mqtt_status"] = '';
+                                    }
+
                                 } else {
                                     $send = ["status" => "error", "message" => "Failed to update READ_SETTINGS"];
                                 }

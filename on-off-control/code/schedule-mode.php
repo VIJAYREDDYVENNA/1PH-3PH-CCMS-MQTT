@@ -2,6 +2,8 @@
 require_once '../../base-path/config-path.php';
 require_once BASE_PATH_1 . 'config_db/config.php';
 require_once BASE_PATH_1 . 'session/session-manager.php';
+require_once '../../common-files/MQTT_Message_publish.php';
+
 SessionManager::checkSession();
 $sessionVars = SessionManager::SessionVariables();
 
@@ -13,7 +15,7 @@ $user_name = $sessionVars['user_name'];
 $user_email = $sessionVars['user_email'];
 $permission_check = 0;
 
-$response = ["status" => "error", "message" => ""];
+$response = ["status" => "error", "message" => "", "mqtt_status" => ""];
 
 if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['D_ID']) && isset($_POST['ON_TIME']) && isset($_POST['OFF_TIME'])) {
 	$conn = mysqli_connect(HOST, USERNAME, PASSWORD, DB_USER);
@@ -68,6 +70,18 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['D_ID']) && isset($_PO
 				mysqli_stmt_bind_param($insert_stmt, "ssssss", $on_time, $off_time, $mobile_no, $user_email, $user_name, $role);
 				mysqli_stmt_execute($insert_stmt);
 				mysqli_stmt_close($insert_stmt);
+
+				try {
+					$on_minutes  = timeToMinutes($on_time);
+					$off_minutes = timeToMinutes($off_time);
+
+					$message = "SCHDON=" . $on_minutes . ";" . $off_minutes;
+					$topic = 'CCMS/' . $device_id . '/SETVALUES';
+					publishMQTTMessage($topic, $message);
+					$response["mqtt_status"] = $message;
+				} catch (Exception $e) {
+					$response["mqtt_status"] = '';
+				}
 
 				$sql_mode = "INSERT INTO `on_off_modes` (`on_off_mode`, `status`, `date_time`, `user_mobile`, `email`, `name`, `role`) VALUES ('SCHEDULE_TIME', 'Initiated',  current_timestamp(), '$mobile_no', '$user_email', '$user_name', '$role');";
 				mysqli_query($conn_db, $sql_mode);
@@ -136,4 +150,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['D_ID']) && isset($_PO
 	$response["message"] = "Invalid request method or missing required POST parameters";
 	echo json_encode($response);
 }
-?>
+
+function timeToMinutes($time)
+{
+	list($hours, $minutes, $seconds) = explode(":", $time);
+	return ($hours * 60) + $minutes;
+}

@@ -19,6 +19,7 @@ device_id_list.addEventListener('change', function() {
 
 function updateStatus()
 {
+	console.log(device_id);
 	$("#pre-loader").css('display', 'block'); 
 	$.ajax({
 		url: '../settings/code/software-update-status.php',

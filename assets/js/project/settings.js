@@ -16,7 +16,7 @@ let device_id_list = document.getElementById('device_id');
 device_id_list.addEventListener('change', function () {
 	device_id = document.getElementById('device_id').value;
 	load_threshold_settings(device_id);
-	
+
 	refresh_data();
 });
 
@@ -321,7 +321,6 @@ function update_settings_value(parameter, update_value) {
 }
 
 function load_threshold_settings(device_id) {
-	console.log("hi");
 
 	$("#pre-loader").css('display', 'block');
 	$.ajax({
@@ -335,7 +334,7 @@ function load_threshold_settings(device_id) {
 			// Update HTML elements with response data
 
 			var selectedValue = response.phase;
-			
+
 			if (selectedValue === "1PH") {
 				$('.singlePhaseDisable').hide();
 			} else {
@@ -467,7 +466,7 @@ function update_data_table(parameter) {
 
 	var refreshButton = document.getElementById('dynamicRefreshButton');
 	refreshButton.onclick = function () {
-		btn_refresh_data(parameter.toUpperCase()); 
+		btn_refresh_data(parameter.toUpperCase());
 	};
 
 	// Perform your AJAX call or other operations

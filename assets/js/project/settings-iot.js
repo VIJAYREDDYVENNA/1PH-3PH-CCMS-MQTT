@@ -339,7 +339,7 @@ function reset_iot_device() {
 	}
 
 	var formData = new FormData();
-	formData.append('PARAMETER_VALUE', "RESET");
+	formData.append('PARAMETER_VALUE', "0");
 	formData.append('UPDATED_STATUS', 'RESET_DEVICE');
 	formData.append('D_ID', device_id);
 	if (confirm(`${mult_sel}`)) {

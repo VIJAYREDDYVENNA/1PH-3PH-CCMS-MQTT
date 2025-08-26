@@ -2,6 +2,9 @@
 require_once '../../base-path/config-path.php';
 require_once BASE_PATH_1 . 'config_db/config.php';
 require_once BASE_PATH_1 . 'session/session-manager.php';
+require_once '../../common-files/MQTT_Message_publish.php';
+
+
 SessionManager::checkSession();
 $sessionVars = SessionManager::SessionVariables();
 
@@ -13,7 +16,7 @@ $user_name = $sessionVars['user_name'];
 $user_email = $sessionVars['user_email'];
 $permission_check = 0;
 
-$response = ["status" => "error", "message" => ""];
+$response = ["status" => "error", "message" => "","mqtt_status"=>""];
 $conn = mysqli_connect(HOST, USERNAME, PASSWORD, DB_USER);
 if (!$conn) {
     $response["message"] = "Connection to User database failed: " . mysqli_connect_error();
@@ -93,6 +96,17 @@ if ($permission_check == 1)
                 mysqli_stmt_bind_param($stmt, 'sssssssssss', $device_id_update, $r_lower_volt, $y_lower_volt, $b_lower_volt, $r_upper_volt, $y_upper_volt, $b_upper_volt, $mobile_no, $user_email, $user_name, $role);
                 mysqli_stmt_execute($stmt);
                 mysqli_stmt_close($stmt);
+
+                try{
+
+					$message ="V_LOWER=" . $r_lower_volt .";".$y_lower_volt.";". $b_lower_volt.";V_UPPER=". $r_upper_volt .";".$y_upper_volt.";". $b_upper_volt;
+					$topic='CCMS/'.$device_id_update.'/SETVALUES';
+					publishMQTTMessage($topic, $message);
+					$response["mqtt_status"]=$message;
+				}
+				catch(Exception $e){
+					$response["mqtt_status"]='';
+				}
 
                 $sql="INSERT INTO `$central_db`.`thresholds` (device_id, l_r, l_y, l_b, u_r, u_y, u_b) VALUES ('$device_id_update', '$r_lower_volt', '$y_lower_volt', '$b_lower_volt', '$r_upper_volt', '$y_upper_volt', '$b_upper_volt') ON DUPLICATE KEY UPDATE l_r = VALUES(l_r), l_y = VALUES(l_y), l_b = VALUES(l_b), u_r = VALUES(u_r), u_y = VALUES(u_y), u_b = VALUES(u_b)";
                 mysqli_query($conn_db, $sql);

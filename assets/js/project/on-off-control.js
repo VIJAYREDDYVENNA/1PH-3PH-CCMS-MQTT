@@ -31,7 +31,8 @@ group_list.addEventListener('change', function() {
 /*document.addEventListener('DOMContentLoaded', function() {
 	refresh_data();	
 });*/
-setInterval(refresh_data_update, 50);
+setTimeout(refresh_data_update, 50);
+setInterval(refresh_data_update, 10000);
 setInterval(refresh_data, 20000);
 function refresh_data_update() {
 	if (typeof update_frame_time === "function") {
@@ -106,6 +107,7 @@ function switchfunction(mode, time) {
 
 	if (confirm(`Are you sure you want to ${mode} the Light?`)) {
 		$("#pre-loader").css('display', 'block'); 
+		
 		$.ajax({
 			type: "POST",
 			url: '../on-off-control/code/on-off-operation.php',
@@ -115,6 +117,7 @@ function switchfunction(mode, time) {
 			success: function(response) {
 				$("#pre-loader").css('display', 'none');
 				alert(response.message);
+				
 			},
 			error: function(jqXHR, textStatus, errorThrown) {
 				$("#pre-loader").css('display', 'none');
