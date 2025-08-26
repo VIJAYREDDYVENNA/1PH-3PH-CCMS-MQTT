@@ -85,19 +85,19 @@ if ($permission_check == 1)
 
 
             $device_id_update=strtoupper($device_id);
-
-        // Prepare and execute the Current limits insertion query
-            $sql_mode = "INSERT INTO `$device_id`.`limits_current` (`device_id`, `i_r`, `i_y`, `i_b`, `date_time`, `user_mobile`, `email`, `name`, `role`) 
-            VALUES (?, ?, ?, ?, current_timestamp(), ?, ?, ?, ?)";            
+            $unique_id=generateUniqueCode6();
+       
+            $sql_mode = "INSERT INTO `$device_id`.`limits_current` (`device_id`, `i_r`, `i_y`, `i_b`, `date_time`, `user_mobile`, `email`, `name`, `role`,`unique_id`) 
+            VALUES (?, ?, ?, ?, current_timestamp(), ?, ?, ?, ?, ?)";            
 
             $stmt = mysqli_prepare($conn_db, $sql_mode);
             if ($stmt) {
-                mysqli_stmt_bind_param($stmt, 'ssssssss', $device_id, $r_current, $y_current, $b_current, $mobile_no, $user_email, $user_name, $role);
+                mysqli_stmt_bind_param($stmt, 'sssssssss', $device_id, $r_current, $y_current, $b_current, $mobile_no, $user_email, $user_name, $role,$unique_id);
                 mysqli_stmt_execute($stmt);
                 mysqli_stmt_close($stmt);
                  try{
 
-					$message ="I_UPPER=" . $r_current .";".$y_current.";". $b_current;
+					$message ="I_UPPER=" . $r_current .";".$y_current.";". $b_current .";". $unique_id;
 					$topic='CCMS/'.$device_id_update.'/SETVALUES';
 					publishMQTTMessage($topic, $message);
 					$response["mqtt_status"]=$message;

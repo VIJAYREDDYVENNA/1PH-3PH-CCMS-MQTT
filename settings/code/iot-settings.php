@@ -70,6 +70,7 @@ if ($permission_check == 1) {
         foreach ($device_ids_array as $device_id) {
             // Validate and sanitize device ID
             $device_id = trim(strtolower($device_id));
+            $unique_id=generateUniqueCode6();
             if (!preg_match('/^[a-z0-9_]+$/', $device_id)) {
                 $response["message"] = "Invalid device ID";
                 echo json_encode($response);
@@ -94,20 +95,20 @@ if ($permission_check == 1) {
                     $device_id = strtoupper($device_id);
 
                     // Updated SQL query for `iot_device_id_change` table
-                    $sql_mode = "INSERT INTO `iot_device_id_change` (`device_id`, `new_device_id`, `date_time`, `user_mobile`, `email`, `name`, `role`) 
-                VALUES ( ?, ?, current_timestamp(), ?, ?, ?, ?)";
+                    $sql_mode = "INSERT INTO `iot_device_id_change` (`device_id`, `new_device_id`, `date_time`, `user_mobile`, `email`, `name`, `role`,`unique_id`) 
+                VALUES ( ?, ?, current_timestamp(), ?, ?, ?, ?,?)";
 
                     $stmt = mysqli_prepare($conn_db, $sql_mode);
                     if ($stmt) {
                         // Bind parameters: s (string) for each parameter
                         $parameter_value = strtoupper(trim($parameter_value));
-                        mysqli_stmt_bind_param($stmt, 'ssssss', $device_id, $parameter_value, $mobile_no, $user_email, $user_name, $role);
+                        mysqli_stmt_bind_param($stmt, 'sssssss', $device_id, $parameter_value, $mobile_no, $user_email, $user_name, $role,$unique_id);
 
                         // Execute the prepared statement
                         mysqli_stmt_execute($stmt);
                         mysqli_stmt_close($stmt);
 
-                        $message = "DEVID=" . $parameter_value;
+                        $message = "DEVID=" . $parameter_value .";". $unique_id;
                         $topic = 'CCMS/' . $device_id . '/SETVALUES';
                         publishMQTT($topic, $message);
                     } else {
@@ -136,20 +137,20 @@ if ($permission_check == 1) {
                     $device_id = strtoupper($device_id);
 
                     // Updated SQL query for `iot_device_id_change` table
-                    $sql_mode = "INSERT INTO `iot_serial_id_change` (`device_id`, `serial_id`, `date_time`, `user_mobile`, `email`, `name`, `role`) 
-                VALUES ( ?, ?, current_timestamp(), ?, ?, ?, ?)";
+                    $sql_mode = "INSERT INTO `iot_serial_id_change` (`device_id`, `serial_id`, `date_time`, `user_mobile`, `email`, `name`, `role`,`unique_id`) 
+                VALUES ( ?, ?, current_timestamp(), ?, ?, ?, ?,?)";
 
                     $stmt = mysqli_prepare($conn_db, $sql_mode);
                     if ($stmt) {
                         // Bind parameters: s (string) for each parameter
                         $parameter_value = strtoupper(trim($parameter_value));
-                        mysqli_stmt_bind_param($stmt, 'ssssss', $device_id, $parameter_value, $mobile_no, $user_email, $user_name, $role);
+                        mysqli_stmt_bind_param($stmt, 'sssssss', $device_id, $parameter_value, $mobile_no, $user_email, $user_name, $role,$unique_id);
 
                         // Execute the prepared statement
                         mysqli_stmt_execute($stmt);
                         mysqli_stmt_close($stmt);
 
-                        $message = "SNO=" . $parameter_value;
+                        $message = "SNO=" . $parameter_value .";". $unique_id;
                         $topic = 'CCMS/' . $device_id . '/SETVALUES';
                         publishMQTT($topic, $message);
                     } else {
@@ -178,19 +179,19 @@ if ($permission_check == 1) {
                     $device_id = strtoupper($device_id);
 
                     // Updated SQL query for `iot_device_id_change` table
-                    $sql_mode = "INSERT INTO `iot_hysteresis` (`device_id`, `value`, `date_time`, `user_mobile`, `email`, `name`, `role`) 
-                VALUES ( ?, ?, current_timestamp(), ?, ?, ?, ?)";
+                    $sql_mode = "INSERT INTO `iot_hysteresis` (`device_id`, `value`, `date_time`, `user_mobile`, `email`, `name`, `role`,`unique_id`) 
+                VALUES ( ?, ?, current_timestamp(), ?, ?, ?, ?,?)";
 
                     $stmt = mysqli_prepare($conn_db, $sql_mode);
                     if ($stmt) {
                         // Bind parameters: s (string) for each parameter
                         $parameter_value = strtoupper(trim($parameter_value));
-                        mysqli_stmt_bind_param($stmt, 'ssssss', $device_id, $parameter_value, $mobile_no, $user_email, $user_name, $role);
+                        mysqli_stmt_bind_param($stmt, 'sssssss', $device_id, $parameter_value, $mobile_no, $user_email, $user_name, $role,$unique_id);
 
                         // Execute the prepared statement
                         mysqli_stmt_execute($stmt);
                         mysqli_stmt_close($stmt);
-                        $message = "HYST=" . $parameter_value;
+                        $message = "HYST=" . $parameter_value .";". $unique_id;
                         $topic = 'CCMS/' . $device_id . '/SETVALUES';
                         publishMQTT($topic, $message);
                         // try {
@@ -228,25 +229,25 @@ if ($permission_check == 1) {
                     $device_id = strtoupper($device_id);
 
                     // Updated SQL query for `iot_device_id_change` table
-                    $sql_mode = "INSERT INTO `iot_on_off_interval` (`device_id`, `value`, `date_time`, `user_mobile`, `email`, `name`, `role`) 
-                VALUES ( ?, ?, current_timestamp(), ?, ?, ?, ?)";
+                    $sql_mode = "INSERT INTO `iot_on_off_interval` (`device_id`, `value`, `date_time`, `user_mobile`, `email`, `name`, `role`,`unique_id`) 
+                VALUES ( ?, ?, current_timestamp(), ?, ?, ?, ?,?)";
 
                     $stmt = mysqli_prepare($conn_db, $sql_mode);
                     if ($stmt) {
                         // Bind parameters: s (string) for each parameter
                         $parameter_value = strtoupper(trim($parameter_value));
-                        mysqli_stmt_bind_param($stmt, 'ssssss', $device_id, $parameter_value, $mobile_no, $user_email, $user_name, $role);
+                        mysqli_stmt_bind_param($stmt, 'sssssss', $device_id, $parameter_value, $mobile_no, $user_email, $user_name, $role,$unique_id);
 
                         // Execute the prepared statement
                         mysqli_stmt_execute($stmt);
                         mysqli_stmt_close($stmt);
                         if ($parameter_value >= 1) {
                             $topic = "CCMS/" . $device_id . "/SETVALUES";
-                            $message = "LOOP_ON_OFF=1;" . $parameter_value;
+                            $message = "LOOP_ON_OFF=1;" . $parameter_value .";". $unique_id;
                             publishMQTT($topic, $message);
                         } else if ($parameter_value <= 0) {
                             $topic = "CCMS/" . $device_id . "/SETVALUES";
-                            $message = "LOOP_ON_OFF=0;0";
+                            $message = "LOOP_ON_OFF=0;0" .";". $unique_id;
                             publishMQTT($topic, $message);
                         }
                     } else {
@@ -275,8 +276,8 @@ if ($permission_check == 1) {
                     $device_id = strtoupper($device_id);
 
                     // Updated SQL query for `iot_device_id_change` table
-                    $sql_mode = "INSERT INTO `iot_reset_energy` (`device_id`, `kwh`, `kvah`, `date_time`, `user_mobile`, `email`, `name`, `role`) 
-                VALUES (?, ?, ?, current_timestamp(), ?, ?, ?, ?)";
+                    $sql_mode = "INSERT INTO `iot_reset_energy` (`device_id`, `kwh`, `kvah`, `date_time`, `user_mobile`, `email`, `name`, `role`,`unique_id`) 
+                VALUES (?, ?, ?, current_timestamp(), ?, ?, ?, ?,?)";
 
                     $stmt = mysqli_prepare($conn_db, $sql_mode);
                     if ($stmt) {
@@ -284,14 +285,14 @@ if ($permission_check == 1) {
                         $parameter_value = strtoupper(trim($parameter_value));
                         $parameter_values = explode(',', $parameter_value);
 
-                        mysqli_stmt_bind_param($stmt, 'sddssss', $device_id, $parameter_values[0], $parameter_values[1], $mobile_no, $user_email, $user_name, $role);
+                        mysqli_stmt_bind_param($stmt, 'sddsssss', $device_id, $parameter_values[0], $parameter_values[1], $mobile_no, $user_email, $user_name, $role,$unique_id);
 
                         // Execute the prepared statement
                         mysqli_stmt_execute($stmt);
                         mysqli_stmt_close($stmt);
 
                         $topic = 'CCMS/' . $device_id . '/SETVALUES';
-                        $message = "ECLR=" . $parameter_values[0] . ";" . $parameter_values[1];
+                        $message = "ECLR=" . $parameter_values[0] . ";" . $parameter_values[1] .";". $unique_id;
                         publishMQTT($topic, $message);
                     } else {
                         $response["message"] = "Error preparing query";
@@ -318,8 +319,8 @@ if ($permission_check == 1) {
                     $device_id = strtoupper($device_id);
 
                     // Updated SQL query for `iot_device_id_change` table
-                    $sql_mode = "INSERT INTO `iot_wifi_credentials` (`device_id`, `ssid`, `password`, `date_time`, `user_mobile`, `email`, `name`, `role`) 
-                VALUES (?, ?, ?, current_timestamp(), ?, ?, ?, ?)";
+                    $sql_mode = "INSERT INTO `iot_wifi_credentials` (`device_id`, `ssid`, `password`, `date_time`, `user_mobile`, `email`, `name`, `role`,`unique_id`) 
+                VALUES (?, ?, ?, current_timestamp(), ?, ?, ?, ?,?)";
 
                     $stmt = mysqli_prepare($conn_db, $sql_mode);
                     if ($stmt) {
@@ -327,14 +328,14 @@ if ($permission_check == 1) {
                         /*$parameter_value = strtoupper(trim($parameter_value));*/
                         $parameter_values = explode(',', $parameter_value);
 
-                        mysqli_stmt_bind_param($stmt, 'sssssss', $device_id, $parameter_values[0], $parameter_values[1], $mobile_no, $user_email, $user_name, $role);
+                        mysqli_stmt_bind_param($stmt, 'ssssssss', $device_id, $parameter_values[0], $parameter_values[1], $mobile_no, $user_email, $user_name, $role,$unique_id);
 
                         // Execute the prepared statement
                         mysqli_stmt_execute($stmt);
                         mysqli_stmt_close($stmt);
 
                         $topic = 'CCMS/' . $device_id . '/SETVALUES';
-                        $message = "WIFI=" . $parameter_values[0] . ";" . $parameter_values[1];
+                        $message = "WIFI=" . $parameter_values[0] . ";" . $parameter_values[1] .";". $unique_id;
                         publishMQTT($topic, $message);
                     } else {
                         $response["message"] = "Error preparing query";
@@ -361,6 +362,7 @@ if ($permission_check == 1) {
 
                     $setting_sql = "INSERT INTO device_settings (`setting_type`, `setting_flag`) VALUES ('READ_SETTINGS', '1') 
                 ON DUPLICATE KEY UPDATE setting_flag='1'";
+                
                     if (!mysqli_query($conn_db, $setting_sql)) {
                         $response["message"] = "Error initiating read saved settings";
                         mysqli_close($conn_db);
@@ -370,7 +372,7 @@ if ($permission_check == 1) {
                     
                     $device_id = strtoupper($device_id);
                     $topic = 'CCMS/' . $device_id . '/SETVALUES';
-                    $message = "READ_SETTINGS";
+                    $message = "READ_SETTINGS" .";". $unique_id;
                     publishMQTT($topic, $message);
 
                     $response["status"] = "success";
@@ -386,14 +388,14 @@ if ($permission_check == 1) {
                     $device_id = strtoupper($device_id);
 
                     // Updated SQL query for `iot_device_id_change` table
-                    $sql_mode = "INSERT INTO `iot_device_reset` (`device_id`, `reset`, `date_time`, `user_mobile`, `email`, `name`, `role`) 
-                VALUES ( ?, ?, current_timestamp(), ?, ?, ?, ?)";
+                    $sql_mode = "INSERT INTO `iot_device_reset` (`device_id`, `reset`, `date_time`, `user_mobile`, `email`, `name`, `role`,`unique_id`) 
+                VALUES ( ?, ?, current_timestamp(), ?, ?, ?, ?,?)";
 
                     $stmt = mysqli_prepare($conn_db, $sql_mode);
                     if ($stmt) {
                         // Bind parameters: s (string) for each parameter
                         $parameter_value = strtoupper(trim($parameter_value));
-                        mysqli_stmt_bind_param($stmt, 'ssssss', $device_id, $parameter_value, $mobile_no, $user_email, $user_name, $role);
+                        mysqli_stmt_bind_param($stmt, 'sssssss', $device_id, $parameter_value, $mobile_no, $user_email, $user_name, $role,$unique_id);
 
                         $setting_sql = "INSERT INTO device_settings (`setting_type`, `setting_flag`) VALUES ('RESET', '1') 
                     ON DUPLICATE KEY UPDATE setting_flag='1'";
@@ -402,7 +404,7 @@ if ($permission_check == 1) {
                         mysqli_stmt_close($stmt);
 
                         $topic = 'CCMS/' . $device_id . '/SETVALUES';
-                        $message = "RESET=" . $parameter_value;
+                        $message = "RESET=" . $parameter_value .";". $unique_id;
                         publishMQTT($topic, $message);
                     } else {
                         $response["message"] = "Error preparing query";

@@ -142,17 +142,18 @@ if ($permission_check == 1) {
                     $user_activity = "Frame-Time interval updated";
                     $update_parameter = "FRAME_TIME";
                     $device_id_update = strtoupper($device_id);
-                    $sql_mode = "INSERT INTO `$device_id`.`frame_time` (`device_id`, `frame_time`, `date_time`, `user_mobile`, `email`, `name`, `role`) 
-                VALUES (?, ?, current_timestamp(), ?, ?, ?, ?)";
+                    $unique_id=generateUniqueCode6();
+                    $sql_mode = "INSERT INTO `$device_id`.`frame_time` (`device_id`, `frame_time`, `date_time`, `user_mobile`, `email`, `name`, `role`,`unique_id`) 
+                VALUES (?, ?, current_timestamp(), ?, ?, ?, ?,?)";
 
                     $stmt = mysqli_prepare($conn_db, $sql_mode);
                     if ($stmt) {
-                        mysqli_stmt_bind_param($stmt, 'ssssss',  $device_id_update, $updated_value, $mobile_no, $user_email, $user_name, $role);
+                        mysqli_stmt_bind_param($stmt, 'sssssss',  $device_id_update, $updated_value, $mobile_no, $user_email, $user_name, $role,$unique_id);
                         mysqli_stmt_execute($stmt);
                         mysqli_stmt_close($stmt);
                         try {
 
-                            $message = "FRAMETIME=" .$updated_value;
+                            $message = "FRAMETIME=" .$updated_value.";". $unique_id;
                             $topic = 'CCMS/' . $device_id_update . '/SETVALUES';
                             publishMQTTMessage($topic, $message);
                             $response["mqtt_status"] = $message;

@@ -81,11 +81,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['D_ID']) && isset($_PO
 				echo json_encode($response);
 				exit();
 			}
-			$sql_mode = "INSERT INTO `on_off_modes` (`on_off_mode`, `status`, `date_time`, `user_mobile`, `email`, `name`, `role`) VALUES ('$mode', 'Initiated',  current_timestamp(), '$mobile_no', '$user_email', '$user_name', '$role');";
+			$unique_id=generateUniqueCode6();
+			$sql_mode = "INSERT INTO `on_off_modes` (`on_off_mode`, `status`, `date_time`, `user_mobile`, `email`, `name`, `role`,`unique_id`) VALUES ('$mode', 'Initiated',  current_timestamp(), '$mobile_no', '$user_email', '$user_name', '$role','$unique_id');";
 			mysqli_query($conn_db, $sql_mode);
 			try {
 				
-				$message = "ON_OFF_MODE:". $mode;
+				$message = "ON_OFF_MODE:". $mode .";".$unique_id;
 				$topic = 'CCMS/' . $device_id . '/SETVALUES';
 				publishMQTTMessage($topic, $message);
 				$response["mqtt_status"] = $message;

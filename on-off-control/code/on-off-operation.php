@@ -64,18 +64,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['D_ID']) && isset($_POS
 				echo json_encode($response);
 				exit();
 			}
-
-			$insert_sql = "INSERT INTO on_off_activities (`device_id`, `on_off`, `time`, `date_time`, `user_mobile`, `email`, `name`, `role`) VALUES (?, ?, ?, current_timestamp(), ?, ?, ?, ?)";
+			$unique_id=generateUniqueCode6();
+			$insert_sql = "INSERT INTO on_off_activities (`device_id`, `on_off`, `time`, `date_time`, `user_mobile`, `email`, `name`, `role`,`unique_id`) VALUES (?, ?, ?, current_timestamp(), ?, ?, ?, ?,?)";
 			$insert_stmt = mysqli_prepare($conn_db, $insert_sql);
 			if ($insert_stmt) {
-				mysqli_stmt_bind_param($insert_stmt, "sssssss", $device_id, $mode, $time, $mobile_no, $user_email, $user_name, $role);
+				mysqli_stmt_bind_param($insert_stmt, "ssssssss", $device_id, $mode, $time, $mobile_no, $user_email, $user_name, $role,$unique_id);
 				mysqli_stmt_execute($insert_stmt);
 				mysqli_stmt_close($insert_stmt);
 				try{
-					$message = $mode . ":" . $time;
+					
+					$message = $mode . ":" . $time.";".$unique_id;
 					$topic='CCMS/'.$device_id.'/SETVALUES';
 					publishMQTTMessage($topic, $message);
 					$response["mqtt_status"]=$message;
+					
 				}
 				catch(Exception $e){
 					$response["mqtt_status"]='';

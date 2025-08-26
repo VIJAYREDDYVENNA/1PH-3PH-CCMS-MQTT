@@ -61,4 +61,35 @@ function publishMQTTMessage($topic, $message, $qos = 2, $retain = true) {
     $mqtt = SimpleMQTT::getInstance();
     return $mqtt->publish($topic, $message, $qos, $retain);
 }
+
+
+function toBase36Upper($num) {
+    $chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    $base = strlen($chars);
+    $result = '';
+    while ($num > 0) {
+        $result = $chars[$num % $base] . $result;
+        $num = intdiv($num, $base);
+    }
+    return $result;
+}
+
+function generateUniqueCode6() {
+    // use milliseconds + random for uniqueness
+    $now = microtime(true);
+    $milliseconds = (int) round($now * 1000);
+
+    // mix datetime with random
+    $num = $milliseconds + random_int(0, 999);
+
+    // convert to Base36 uppercase
+    $code = toBase36Upper($num);
+
+    // make sure it's exactly 6 chars (pad or trim)
+    return str_pad(substr($code, -6), 6, '0', STR_PAD_LEFT);
+}
+
+// echo generateUniqueCode6();
+
+
 ?>

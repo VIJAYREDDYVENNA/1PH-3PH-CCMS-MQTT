@@ -88,18 +88,18 @@ if ($permission_check == 1)
                 exit();
             }
              $device_id_update=strtoupper($device_id);
-        // Prepare and execute the voltage limits insertion query
-            $sql_limits = "INSERT INTO `$device_id`.`limits_voltage` (`device_id`, `l_r`, `l_y`, `l_b`, `u_r`, `u_y`, `u_b`, `date_time`, `user_mobile`, `email`, `name`, `role`) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, current_timestamp(), ?, ?, ?, ?)";
+             $unique_id=generateUniqueCode6();
+            $sql_limits = "INSERT INTO `$device_id`.`limits_voltage` (`device_id`, `l_r`, `l_y`, `l_b`, `u_r`, `u_y`, `u_b`, `date_time`, `user_mobile`, `email`, `name`, `role`,`unique_id`) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, current_timestamp(), ?, ?, ?, ?,?)";
             $stmt = mysqli_prepare($conn_db, $sql_limits);
             if ($stmt) {
-                mysqli_stmt_bind_param($stmt, 'sssssssssss', $device_id_update, $r_lower_volt, $y_lower_volt, $b_lower_volt, $r_upper_volt, $y_upper_volt, $b_upper_volt, $mobile_no, $user_email, $user_name, $role);
+                mysqli_stmt_bind_param($stmt, 'ssssssssssss', $device_id_update, $r_lower_volt, $y_lower_volt, $b_lower_volt, $r_upper_volt, $y_upper_volt, $b_upper_volt, $mobile_no, $user_email, $user_name, $role,$unique_id);
                 mysqli_stmt_execute($stmt);
                 mysqli_stmt_close($stmt);
 
                 try{
 
-					$message ="V_LOWER=" . $r_lower_volt .";".$y_lower_volt.";". $b_lower_volt.";V_UPPER=". $r_upper_volt .";".$y_upper_volt.";". $b_upper_volt;
+					$message ="V_LOWER=" . $r_lower_volt .";".$y_lower_volt.";". $b_lower_volt.";V_UPPER=". $r_upper_volt .";".$y_upper_volt.";". $b_upper_volt.";".$unique_id;
 					$topic='CCMS/'.$device_id_update.'/SETVALUES';
 					publishMQTTMessage($topic, $message);
 					$response["mqtt_status"]=$message;

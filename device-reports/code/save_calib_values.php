@@ -68,8 +68,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['D_ID']) && isset($_PO
 
 		try {
 			// Insert into `iot_calibration_values`
-			$stmt = mysqli_prepare($conn, "INSERT INTO `iot_calibration_values` (`device_id`, `frame`, `date_time`, `user_mobile`, `email`, `name`, `role`) VALUES (?, ?, ?, ?, ?, ?, ?)");
-			mysqli_stmt_bind_param($stmt, 'sssssss', $device_ids, $calib_frame, $date, $mobile_no, $user_email, $user_name, $role);
+			$unique_id=generateUniqueCode6();
+			$stmt = mysqli_prepare($conn, "INSERT INTO `iot_calibration_values` (`device_id`, `frame`, `date_time`, `user_mobile`, `email`, `name`, `role`,`unique_id`) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+			mysqli_stmt_bind_param($stmt, 'ssssssss', $device_ids, $calib_frame, $date, $mobile_no, $user_email, $user_name, $role,$unique_id);
 			if (!mysqli_stmt_execute($stmt)) {
 				$response["message"] = "Error inserting calibration values";
 				mysqli_stmt_close($stmt);
@@ -79,7 +80,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['D_ID']) && isset($_PO
 			}
 			
 			try {
-				$mqtt_message = "CALIB:" . $calib_frame;
+				$mqtt_message = "CALIB:" . $calib_frame. $unique_id;
 				$mqtt_topic = 'CCMS/' . $device_ids . '/SETVALUES';
 				publishMQTTMessage($mqtt_topic, $mqtt_message);
 				$response["mqtt_status"] = $mqtt_message;

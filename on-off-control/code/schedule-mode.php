@@ -63,11 +63,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['D_ID']) && isset($_PO
 				echo json_encode($response);
 				exit();
 			}
-
-			$insert_sql = "INSERT INTO on_off_schedule_time (`on_time`, `off_time`, `status`, `date_time`, `user_mobile`, `email`, `name`, `role`) VALUES (?, ?, 'Initiated', current_timestamp(), ?, ?, ?, ?)";
+			$unique_id=generateUniqueCode6();
+			$insert_sql = "INSERT INTO on_off_schedule_time (`on_time`, `off_time`, `status`, `date_time`, `user_mobile`, `email`, `name`, `role`,`unique_id`) VALUES (?, ?, 'Initiated', current_timestamp(), ?, ?, ?, ?,?)";
 			$insert_stmt = mysqli_prepare($conn_db, $insert_sql);
 			if ($insert_stmt) {
-				mysqli_stmt_bind_param($insert_stmt, "ssssss", $on_time, $off_time, $mobile_no, $user_email, $user_name, $role);
+				mysqli_stmt_bind_param($insert_stmt, "sssssss", $on_time, $off_time, $mobile_no, $user_email, $user_name, $role,$unique_id);
 				mysqli_stmt_execute($insert_stmt);
 				mysqli_stmt_close($insert_stmt);
 
@@ -75,7 +75,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['D_ID']) && isset($_PO
 					$on_minutes  = timeToMinutes($on_time);
 					$off_minutes = timeToMinutes($off_time);
 
-					$message = "SCHDON=" . $on_minutes . ";" . $off_minutes;
+					$message = "SCHDON=" . $on_minutes . ";" . $off_minutes .";". $unique_id;
 					$topic = 'CCMS/' . $device_id . '/SETVALUES';
 					publishMQTTMessage($topic, $message);
 					$response["mqtt_status"] = $message;
