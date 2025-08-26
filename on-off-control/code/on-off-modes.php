@@ -2,6 +2,8 @@
 require_once '../../base-path/config-path.php';
 require_once BASE_PATH_1 . 'config_db/config.php';
 require_once BASE_PATH_1 . 'session/session-manager.php';
+require_once '../../common-files/MQTT_Message_publish.php';
+
 SessionManager::checkSession();
 $sessionVars = SessionManager::SessionVariables();
 
@@ -13,12 +15,12 @@ $user_name = $sessionVars['user_name'];
 $user_email = $sessionVars['user_email'];
 $permission_check = 0;
 
-$response = ["status" => "error", "message" => ""];
+$response = ["status" => "error", "message" => "", "mqtt_status" => ""];
 
 /*$device_ids="CCMS_1";
 $mode ="ASTRO";
 */
-if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['D_ID']) && isset($_POST['ON_OFF_MODE']) ) {
+if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['D_ID']) && isset($_POST['ON_OFF_MODE'])) {
 
 
 	$conn = mysqli_connect(HOST, USERNAME, PASSWORD, DB_USER);
@@ -29,8 +31,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['D_ID']) && isset($_PO
 	}
 
 	$device_ids = htmlspecialchars(mysqli_real_escape_string($conn, $_POST['D_ID']));
-	$mode =trim(htmlspecialchars(mysqli_real_escape_string($conn, $_POST['ON_OFF_MODE'])));
-	
+	$mode = trim(htmlspecialchars(mysqli_real_escape_string($conn, $_POST['ON_OFF_MODE'])));
+
 
 	$device_ids_array = explode(",", $device_ids);
 
@@ -60,20 +62,15 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['D_ID']) && isset($_PO
 
 	if ($permission_check == 1) {
 
-		$on_off_activity = $mode." mode Initiated";
-		
-		if($mode==="AMBIENT_ASTRO")
-		{
-			$on_off_activity="Ambient & Astronomical mode Initiated";
-		}
-		else if($mode==="AMBIENT")
-		{
-			$on_off_activity="Ambient mode Initiated";
-		}
-		else if($mode==="ASTRO")
-		{
-			$mode="ASTRONOMICAL";
-			$on_off_activity="Astronomical mode Initiated";
+		$on_off_activity = $mode . " mode Initiated";
+
+		if ($mode === "AMBIENT_ASTRO") {
+			$on_off_activity = "Ambient & Astronomical mode Initiated";
+		} else if ($mode === "AMBIENT") {
+			$on_off_activity = "Ambient mode Initiated";
+		} else if ($mode === "ASTRO") {
+			$mode = "ASTRONOMICAL";
+			$on_off_activity = "Astronomical mode Initiated";
 		}
 
 
@@ -86,7 +83,17 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['D_ID']) && isset($_PO
 			}
 			$sql_mode = "INSERT INTO `on_off_modes` (`on_off_mode`, `status`, `date_time`, `user_mobile`, `email`, `name`, `role`) VALUES ('$mode', 'Initiated',  current_timestamp(), '$mobile_no', '$user_email', '$user_name', '$role');";
 			mysqli_query($conn_db, $sql_mode);
-
+			try {
+				
+				$message = "ON_OFF_MODE:". $mode;
+				$topic = 'CCMS/' . $device_id . '/SETVALUES';
+				publishMQTTMessage($topic, $message);
+				$response["mqtt_status"] = $message;
+				
+			} catch (Exception $e) {
+				$response["mqtt_status"] = '';
+				
+			}
 			$cancel_sql = "INSERT INTO device_settings (`setting_type`, `setting_flag`) VALUES ('SCHEDULE_TIME', '0') ON DUPLICATE KEY UPDATE setting_flag='0'";
 			mysqli_query($conn_db, $cancel_sql);
 			$setting_sql = "INSERT INTO device_settings (`setting_type`, `setting_flag`) VALUES ('ON_OFF_MODE', '1') ON DUPLICATE KEY UPDATE setting_flag='1'";
@@ -108,10 +115,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['D_ID']) && isset($_PO
 				echo json_encode($response);
 				exit();
 			}
-			
+
 
 			$response["status"] = "success";
-			$response["message"] = $mode." mode Initiated";
+			$response["message"] = $mode . " mode Initiated";
 			mysqli_close($conn_db);
 		}
 
@@ -145,4 +152,3 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['D_ID']) && isset($_PO
 	$response["message"] = "Invalid request method or missing required POST parameters";
 	echo json_encode($response);
 }
-?>

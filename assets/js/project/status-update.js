@@ -202,7 +202,7 @@ document.querySelectorAll('.validate_input').forEach(function(element) {
 });
 
 // Function to check required inputs
-function checkRequiredInputs() {
+function checkRequiredInputs() {    
     let frame = "";
     let count = true;
 
@@ -229,8 +229,8 @@ function checkRequiredInputs() {
 
         if (device_id) {
 
-            if (confirm("Are you sure?")) {
-
+            if (confirm("Are you sure You Want to Save?")) {
+                // console.log(frame);
                 $.ajax({
                     method : "POST",
                     url:"../device-reports/code/save_calib_values.php",
@@ -240,7 +240,7 @@ function checkRequiredInputs() {
                     success : function(result){
                         success_message_text.textContent=result.message;
                         success_toast.show();                      
-
+                        
                     },
                     error: function(jqXHR, textStatus, errorThrown) {
                         $("#pre-loader").css('display', 'none');
@@ -287,7 +287,7 @@ function read_iot_settings(){
     formData.append('UPDATED_STATUS', 'READ_SETTINGS');
     formData.append('D_ID', device_id);
     if (confirm(`Are you sure ?`)) {
-        $("#pre-loader").css('display', 'block'); 
+        $("#pre-loader").css('display', 'block');
         $.ajax({
             type: "POST",
             url: '../settings/code/iot-settings.php',                   

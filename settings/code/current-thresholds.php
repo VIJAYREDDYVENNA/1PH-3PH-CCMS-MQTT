@@ -2,6 +2,8 @@
 require_once '../../base-path/config-path.php';
 require_once BASE_PATH_1 . 'config_db/config.php';
 require_once BASE_PATH_1 . 'session/session-manager.php';
+require_once '../../common-files/MQTT_Message_publish.php';
+
 SessionManager::checkSession();
 $sessionVars = SessionManager::SessionVariables();
 
@@ -13,8 +15,7 @@ $user_name = $sessionVars['user_name'];
 $user_email = $sessionVars['user_email'];
 $permission_check = 0;
 
-$response = ["status" => "error", "message" => ""];
-
+$response = ["status" => "error", "message" => "","mqtt_status"=>""];
 
 $conn = mysqli_connect(HOST, USERNAME, PASSWORD, DB_USER);
 if (!$conn) {
@@ -94,6 +95,16 @@ if ($permission_check == 1)
                 mysqli_stmt_bind_param($stmt, 'ssssssss', $device_id, $r_current, $y_current, $b_current, $mobile_no, $user_email, $user_name, $role);
                 mysqli_stmt_execute($stmt);
                 mysqli_stmt_close($stmt);
+                 try{
+
+					$message ="I_UPPER=" . $r_current .";".$y_current.";". $b_current;
+					$topic='CCMS/'.$device_id_update.'/SETVALUES';
+					publishMQTTMessage($topic, $message);
+					$response["mqtt_status"]=$message;
+				}
+				catch(Exception $e){
+					$response["mqtt_status"]='';
+				}
                 mysqli_query($conn_db, "INSERT INTO `$central_db`.`thresholds` (device_id, i_r, i_y, i_b) VALUES ('$device_id_update', '$r_current', '$y_current', '$b_current') ON DUPLICATE KEY UPDATE i_r = VALUES(i_r), i_y = VALUES(i_y), i_b = VALUES(i_b);");
                 
             } else {
